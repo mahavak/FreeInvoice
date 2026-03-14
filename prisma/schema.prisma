@@ -1,0 +1,99 @@
+// Prisma Schema for FreeInvoice
+// Author: Senior AI Engineering Collaborator
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  clients       Client[]
+  invoices      Invoice[]
+  
+  // SaaS Logic: Pro (1-for-3 impact model)
+  subscriptionType String @default("free") // free, pro, agency
+  stripeCustomerId String? @unique
+  
+  // Social Impact Tracking
+  creditsGenerated Int @default(0) 
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?  @db.Text
+  access_token       String?  @db.Text
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?  @db.Text
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Client {
+  id        String    @id @default(cuid())
+  userId    String
+  name      String
+  email     String
+  address   String?
+  invoices  Invoice[]
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Invoice {
+  id          String   @id @default(cuid())
+  userId      String
+  clientId    String
+  number      String
+  date        DateTime @default(now())
+  dueDate     DateTime
+  items       Json     // Array of { description, quantity, price }
+  taxRate     Float    @default(0)
+  total       Float
+  status      String   @default("draft") // draft, sent, paid, overdue
+  
+  user        User     @relation(fields: [userId], references: [id])
+  client      Client   @relation(fields: [clientId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SocialImpactCredit {
+  id        String   @id @default(cuid())
+  sponsorId String?  // ID of Pro user who funded this
+  beneficiaryId String @unique // ID of recipient
+  fundedAt  DateTime @default(now())
+}
