@@ -22,7 +22,6 @@ model User {
   
   // SaaS Logic: Pro (1-for-3 impact model)
   subscriptionType String @default("free") // free, pro, agency
-  stripeCustomerId String? @unique
   
   // Social Impact Tracking
   creditsGenerated Int @default(0) 

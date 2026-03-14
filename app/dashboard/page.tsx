@@ -93,11 +93,6 @@ export default async function DashboardPage() {
                 <ActionButton label="Update Branding" icon={<Sparkles size={18} />} />
               </div>
             </div>
-            
-            <div className="rounded-3xl border border-emerald-100 bg-emerald-50/30 p-8 text-center backdrop-blur-sm">
-              <p className="text-xs font-black uppercase tracking-widest text-emerald-700 mb-2">Upgrade Status</p>
-              <p className="text-sm font-medium text-emerald-900">You are currently on the <span className="font-bold">Free Tier</span>. (3/mo remaining)</p>
-            </div>
           </div>
         </div>
       </div>
