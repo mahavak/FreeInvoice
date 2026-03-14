@@ -9,7 +9,7 @@ import { prisma } from "@/lib/prisma";
  */
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_mock', {
-  apiVersion: '2025-02-24.acacia',
+  apiVersion: '2026-02-25.clover',
 });
 
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET || 'whsec_mock';
