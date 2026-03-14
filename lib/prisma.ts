@@ -3,27 +3,27 @@ import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient } from '@prisma/client'
 
 /**
- * Build-Safe Prisma Client (Truly Lazy)
+ * Truly Build-Safe Prisma Client
  * Author: Senior AI Engineering Collaborator
- * Purpose: Prevent crashes during 'next build' by deferring instantiation until first query.
+ * Purpose: Allows Next.js to build without a DATABASE_URL by providing a No-Op proxy.
  */
 
-let prismaInstance: PrismaClient | null = null;
+const globalForPrisma = global as unknown as { prisma: PrismaClient };
 
-const getPrisma = (): PrismaClient => {
-  if (prismaInstance) return prismaInstance;
-
+const createInstance = (): PrismaClient => {
   const connectionString = process.env.DATABASE_URL;
 
+  // If we are in build mode or missing URL, return a Proxy that doesn't crash on property access
   if (!connectionString) {
-    // During build, we return a shell that doesn't throw until a method is called.
-    // This allows Next.js to complete the build without a DATABASE_URL.
+    console.warn("[PRISMA_WARN]: DATABASE_URL is missing. Providing a No-Op Proxy for build compatibility.");
     return new Proxy({} as PrismaClient, {
       get: (target, prop) => {
-        throw new Error(
-          `Prisma accessed before DATABASE_URL was set. Property: ${String(prop)}. ` +
-          `Ensure DATABASE_URL is in your environment variables.`
-        );
+        // Return a function that throws only when CALLED, not when accessed.
+        // This allows PrismaAdapter to initialize without crashing the build.
+        if (prop === 'then') return undefined;
+        return () => {
+          throw new Error("DATABASE_URL is not set. Please configure it in your environment variables.");
+        };
       }
     });
   }
@@ -31,17 +31,12 @@ const getPrisma = (): PrismaClient => {
   const pool = new Pool({ connectionString });
   const adapter = new PrismaPg(pool as any);
 
-  prismaInstance = new PrismaClient({
+  return new PrismaClient({
     adapter: adapter as any,
     log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
   });
-
-  return prismaInstance;
 };
 
-const globalForPrisma = global as unknown as { prisma: PrismaClient };
-
-// Export as a getter-compatible object or just the instance
-export const prisma = globalForPrisma.prisma || getPrisma();
+export const prisma = globalForPrisma.prisma || createInstance();
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
