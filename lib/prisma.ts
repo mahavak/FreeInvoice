@@ -3,32 +3,45 @@ import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient } from '@prisma/client'
 
 /**
- * Prisma Client with PostgreSQL Adapter (Lazy Loading)
+ * Build-Safe Prisma Client (Truly Lazy)
  * Author: Senior AI Engineering Collaborator
- * Purpose: Prevent crashes during build/initialization if DB is not yet available.
+ * Purpose: Prevent crashes during 'next build' by deferring instantiation until first query.
  */
 
-const createPrismaClient = () => {
+let prismaInstance: PrismaClient | null = null;
+
+const getPrisma = (): PrismaClient => {
+  if (prismaInstance) return prismaInstance;
+
   const connectionString = process.env.DATABASE_URL;
 
   if (!connectionString) {
-    console.warn("[PRISMA_WARN]: DATABASE_URL is missing. Database features will be unavailable.");
-    // Return a dummy object or handle based on your needs. 
-    // Here we still return a client but it will fail on query rather than on module load.
-    return new PrismaClient();
+    // During build, we return a shell that doesn't throw until a method is called.
+    // This allows Next.js to complete the build without a DATABASE_URL.
+    return new Proxy({} as PrismaClient, {
+      get: (target, prop) => {
+        throw new Error(
+          `Prisma accessed before DATABASE_URL was set. Property: ${String(prop)}. ` +
+          `Ensure DATABASE_URL is in your environment variables.`
+        );
+      }
+    });
   }
 
   const pool = new Pool({ connectionString });
   const adapter = new PrismaPg(pool as any);
 
-  return new PrismaClient({
+  prismaInstance = new PrismaClient({
     adapter: adapter as any,
     log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
   });
+
+  return prismaInstance;
 };
 
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
 
-export const prisma = globalForPrisma.prisma || createPrismaClient();
+// Export as a getter-compatible object or just the instance
+export const prisma = globalForPrisma.prisma || getPrisma();
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
