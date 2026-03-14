@@ -4,6 +4,12 @@ import { Sparkles, Trash2, Plus, Loader2, DollarSign, Clock, FileText, Download 
 import { PDFDownloadLink } from '@react-pdf/renderer'
 import { InvoicePDF } from './InvoicePDF'
 
+interface Item {
+  description: string;
+  quantity: number | string;
+  price: number | string;
+}
+
 /**
  * SmartInvoiceCreator: FreeInvoice Phase 4 Implementation
  * Features: AI Generation + PDF Export + Client-side Hydration.
