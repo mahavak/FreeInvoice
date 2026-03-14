@@ -3,23 +3,32 @@ import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient } from '@prisma/client'
 
 /**
- * Prisma Client with PostgreSQL Adapter
+ * Prisma Client with PostgreSQL Adapter (Lazy Loading)
  * Author: Senior AI Engineering Collaborator
- * Purpose: Secure and stable database connection for Next.js 14.
+ * Purpose: Prevent crashes during build/initialization if DB is not yet available.
  */
 
-const globalForPrisma = global as unknown as { prisma: PrismaClient }
+const createPrismaClient = () => {
+  const connectionString = process.env.DATABASE_URL;
 
-const connectionString = process.env.DATABASE_URL || 'postgresql://mock:mock@localhost:5432/mock'
+  if (!connectionString) {
+    console.warn("[PRISMA_WARN]: DATABASE_URL is missing. Database features will be unavailable.");
+    // Return a dummy object or handle based on your needs. 
+    // Here we still return a client but it will fail on query rather than on module load.
+    return new PrismaClient();
+  }
 
-const pool = new Pool({ connectionString })
-const adapter = new PrismaPg(pool as any)
+  const pool = new Pool({ connectionString });
+  const adapter = new PrismaPg(pool as any);
 
-export const prisma =
-  globalForPrisma.prisma ||
-  new PrismaClient({
+  return new PrismaClient({
     adapter: adapter as any,
     log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
-  })
+  });
+};
 
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
+const globalForPrisma = global as unknown as { prisma: PrismaClient };
+
+export const prisma = globalForPrisma.prisma || createPrismaClient();
+
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
