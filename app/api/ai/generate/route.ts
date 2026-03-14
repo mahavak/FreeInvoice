@@ -21,7 +21,10 @@ export async function POST(req: Request) {
     // Connect to local 3090 Ti via secure tunnel or local network
     const response = await fetch(`${AI_NODE_URL}/v1/chat/completions`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { 
+        "Content-Type": "application/json",
+        "ngrok-skip-browser-warning": "69420" // Bypass ngrok warning page
+      },
       body: JSON.stringify({
         model: "qwen",
         messages: [
