@@ -15,10 +15,11 @@ export async function POST(req: Request) {
   }
 
   const { prompt } = await req.json();
+  const AI_NODE_URL = process.env.AI_NODE_URL || "http://localhost:8080";
 
   try {
-    // Local AI Server (llama-cpp-python on port 8080)
-    const response = await fetch("http://localhost:8080/v1/chat/completions", {
+    // Connect to local 3090 Ti via secure tunnel or local network
+    const response = await fetch(`${AI_NODE_URL}/v1/chat/completions`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
