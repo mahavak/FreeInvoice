@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Sparkles, Globe, Zap, ShieldCheck, ArrowRight, CheckCircle2 } from 'lucide-react'
+import Script from 'next/script'
 
 /**
  * FreeInvoice Landing Page
@@ -20,7 +21,7 @@ export default function LandingPage() {
           <Link href="#mission" className="text-sm font-bold text-gray-400 hover:text-gray-900 transition-colors uppercase tracking-widest">Our Mission</Link>
           <Link href="/api/auth/signin" className="text-sm font-bold text-gray-900 hover:text-indigo-600 transition-colors uppercase tracking-widest border-l border-gray-200 pl-8">Log In</Link>
         </div>
-        <Link href="/dashboard" className="rounded-full bg-indigo-600 px-8 py-3 text-sm font-black text-white shadow-xl shadow-indigo-100 transition-all hover:bg-indigo-700 hover:shadow-indigo-200 active:scale-95">
+        <Link href="/dashboard" data-track="cta_click" data-track-target="nav_get_started" className="rounded-full bg-indigo-600 px-8 py-3 text-sm font-black text-white shadow-xl shadow-indigo-100 transition-all hover:bg-indigo-700 hover:shadow-indigo-200 active:scale-95">
           Get Started
         </Link>
       </nav>
@@ -31,17 +32,17 @@ export default function LandingPage() {
           <div className="mx-auto max-w-6xl text-center">
             <div className="mb-10 inline-flex items-center gap-2 rounded-full bg-indigo-50 px-5 py-2 text-xs font-black uppercase tracking-[0.2em] text-indigo-600 ring-1 ring-indigo-100 shadow-sm">
               <Sparkles size={14} />
-              <span>The World's First 1-for-3 Invoicing App</span>
+              <span>AI Facturatie voor ZZP&apos;ers &mdash; 1.2M Nederlandse Freelancers</span>
             </div>
             <h1 className="mb-8 text-6xl font-black tracking-tight text-gray-900 lg:text-9xl leading-[0.9]">
-              Invoicing <br />
-              <span className="text-indigo-600 italic">Redefined.</span>
+              Factureren<br />
+              <span className="text-indigo-600 italic">in 30 seconden.</span>
             </h1>
             <p className="mx-auto mb-14 max-w-2xl text-xl font-medium leading-relaxed text-gray-500">
-              Describe your work in plain English. Our local AI node (powered by NVIDIA 3090 Ti) generates professional, accurate invoices instantly. No templates, no friction.
+              Typ wat je hebt gedaan. AI maakt een professionele factuur &mdash; met BTW, IBAN, KVK, en alles erop en eraan. Geen sjablonen, geen gedoe. Vanaf &euro;0/maand.
             </p>
             <div className="flex flex-col items-center justify-center gap-6 sm:flex-row">
-              <Link href="/dashboard" className="group flex items-center gap-3 rounded-2xl bg-indigo-600 px-12 py-6 text-xl font-black text-white shadow-2xl shadow-indigo-200 transition-all hover:bg-indigo-700 active:scale-95">
+              <Link href="/dashboard" data-track="cta_click" data-track-target="hero_start_free" className="group flex items-center gap-3 rounded-2xl bg-indigo-600 px-12 py-6 text-xl font-black text-white shadow-2xl shadow-indigo-200 transition-all hover:bg-indigo-700 active:scale-95">
                 <span>Start for Free</span>
                 <ArrowRight size={24} className="transition-transform group-hover:translate-x-1" />
               </Link>
@@ -62,18 +63,18 @@ export default function LandingPage() {
             <div className="grid grid-cols-1 gap-10 lg:grid-cols-3">
               <FeatureCard 
                 icon={<Zap size={32} className="text-amber-500" />}
-                title="AI-Powered Speed"
-                description="Stop wasting 20 minutes on formatting. Describe your work and get a structured, professional PDF in 30 seconds."
+                title="AI-Gedreven Snelheid"
+                description="Stop met 20 minuten per factuur. Typ je werk, en krijg direct een professionele PDF met BTW-berekening en IBAN."
               />
               <FeatureCard 
                 icon={<ShieldCheck size={32} className="text-emerald-500" />}
                 title="Privacy First"
-                description="We use private local LLMs. Your project data stays off the big tech grids, ensuring maximum confidentiality."
+                description="Wij gebruiken lokale AI. Je projectgegevens blijven uit de cloud &mdash; maximale vertrouwelijkheid voor jouw klanten."
               />
               <FeatureCard 
                 icon={<Globe size={32} className="text-indigo-500" />}
-                title="Global Impact"
-                description="Your Pro subscription funds 3 free accounts for freelancers in developing countries. Leveling the global field."
+                title="1-for-3 Impact"
+                description="Elke Pro-abonnement financiert 3 gratis accounts voor freelancers in ontwikkelingslanden. Samen maken we het eerlijker."
               />
             </div>
           </div>
@@ -83,13 +84,13 @@ export default function LandingPage() {
         <section id="mission" className="px-6 py-32 lg:px-12 overflow-hidden relative">
           <div className="mx-auto max-w-5xl rounded-[48px] bg-indigo-900 p-12 lg:p-24 text-center text-white shadow-2xl relative z-10">
             <h2 className="mb-8 text-4xl lg:text-6xl font-black tracking-tight leading-tight">
-              A mission to support <br />
-              <span className="text-indigo-300 italic">global creators.</span>
+              Een missie om <br />
+              <span className="text-indigo-300 italic">wereldwijde makers te steunen.</span>
             </h2>
             <p className="mx-auto mb-12 max-w-2xl text-xl font-medium text-indigo-100 opacity-80">
-              We believe professional tools shouldn't be a barrier. Join us in building a more equitable freelance economy while streamlining your own business.
+              Professionele tools zouden geen drempel moeten zijn. Sluit je aan en bouw mee aan een eerlijker freelance-economie &mdash; terwijl je je eigen bedrijf versnelt.
             </p>
-            <Link href="/dashboard" className="inline-flex rounded-2xl bg-white px-12 py-5 text-lg font-black text-indigo-900 shadow-xl transition-all hover:bg-indigo-50 active:scale-95">
+            <Link href="/dashboard" data-track="cta_click" data-track-target="mission_join" className="inline-flex rounded-2xl bg-white px-12 py-5 text-lg font-black text-indigo-900 shadow-xl transition-all hover:bg-indigo-50 active:scale-95">
               Join the Movement
             </Link>
           </div>
@@ -105,9 +106,9 @@ export default function LandingPage() {
             <span>FreeInvoice</span>
           </div>
           <div className="flex gap-10 text-xs font-black uppercase tracking-widest text-gray-400">
-            <a href="#" className="hover:text-indigo-600">Privacy</a>
-            <a href="#" className="hover:text-indigo-600">Terms</a>
-            <a href="#" className="hover:text-indigo-600">Contact</a>
+            <Link href="/privacy" className="hover:text-indigo-600">Privacy</Link>
+            <Link href="/terms" className="hover:text-indigo-600">Terms</Link>
+            <Link href="/contact" className="hover:text-indigo-600">Contact</Link>
           </div>
           <p className="text-xs font-bold text-gray-300">© 2026 FreeInvoice. All rights reserved.</p>
         </div>
@@ -124,6 +125,26 @@ function FeatureCard({ icon, title, description }: any) {
       </div>
       <h3 className="mb-4 text-2xl font-black text-gray-900">{title}</h3>
       <p className="text-lg font-medium leading-relaxed text-gray-500">{description}</p>
-    </div>
+    
+      {/* Lightweight funnel tracking — no cookies, no PII */}
+      <Script id="funnel-track" strategy="afterInteractive">
+        {`
+          (function() {
+            const post = (event, metadata) => {
+              fetch('/api/track', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ event, page: location.pathname, metadata }),
+              }).catch(() => {});
+            };
+            post('page_view');
+            document.addEventListener('click', (e) => {
+              const el = e.target.closest('[data-track]');
+              if (el) post(el.dataset.track, { target: el.dataset.trackTarget || '' });
+            });
+          })();
+        `}
+      </Script>
+</div>
   )
 }

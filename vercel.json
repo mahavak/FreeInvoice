@@ -1,0 +1,10 @@
+{
+  "framework": "nextjs",
+  "regions": ["cdg1"],
+  "crons": [
+    {
+      "path": "/api/recurring/process",
+      "schedule": "0 0 * * *"
+    }
+  ]
+}

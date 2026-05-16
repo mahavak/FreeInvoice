@@ -1,57 +1,69 @@
 import { NextResponse } from 'next/server';
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "../../auth/[...nextauth]/route";
+import { checkInvoiceUsage, incrementInvoiceUsage } from '@/lib/usage-tracking';
+import { aiFallbackGenerate, type AIGenerateResult } from '@/lib/ai-fallback';
 
 /**
  * AI Generation Bridge: FreeInvoice -> 3090 Ti (Local Qwen Server)
  * Author: Senior AI Engineering Collaborator
  * Purpose: Zero-cost AI inference for professional line-item generation.
+ * 
+ * Phase 3 Enhancement: AI Fallback System (Local Qwen -> OpenRouter)
+ * - Tries local GPU first (zero cost)
+ * - Falls back to OpenRouter cloud if GPU offline
+ * - Tracks which provider was used for cost analysis
  */
 export async function POST(req: Request) {
-  // SaaS Gating: Ensure only authenticated users can use the GPU resources
-  const session = await getServerSession(authOptions);
-  if (!session) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  // Check usage limits before proceeding
+  const usageCheck = await checkInvoiceUsage();
+  
+  // If usageCheck is a NextResponse, it means unauthorized
+  if (usageCheck instanceof NextResponse) {
+    return usageCheck;
   }
 
-  const { prompt } = await req.json();
-  const AI_NODE_URL = process.env.AI_NODE_URL || "http://localhost:8080";
+  if (!usageCheck.allowed) {
+    return NextResponse.json(
+      { 
+        error: 'Invoice limit reached',
+        remaining: 0,
+        tier: usageCheck.tierName,
+        message: `You've used all your invoices for this month. Upgrade to Pro for 50 invoices/month.`
+      },
+      { status: 429 }
+    );
+  }
+
+  const { prompt, language = 'en' } = await req.json();
 
   try {
-    // Connect to local 3090 Ti via secure tunnel or local network
-    const response = await fetch(`${AI_NODE_URL}/v1/chat/completions`, {
-      method: "POST",
-      headers: { 
-        "Content-Type": "application/json",
-        "ngrok-skip-browser-warning": "69420" // Bypass ngrok warning page
-      },
-      body: JSON.stringify({
-        model: "qwen",
-        messages: [
-          { 
-            role: "system", 
-            content: "You are a professional freelance consultant. Convert the user's project description into a JSON array of invoice line items. Each item must have 'description', 'quantity' (hours), and 'price' (hourly rate). Example: [{\"description\": \"Initial UI Design\", \"quantity\": 10, \"price\": 75}]. Return ONLY the JSON array." 
-          },
-          { role: "user", content: prompt }
-        ],
-        temperature: 0.1, // Low temperature for consistent JSON output
-        response_format: { type: "json_object" }
-      }),
-    });
-
-    if (!response.ok) throw new Error("AI Server Unreachable");
-
-    const data = await response.json();
-    const content = data.choices[0].message.content;
+    // Use AI fallback system (tries local first, then cloud)
+    const result: AIGenerateResult = await aiFallbackGenerate(prompt, language);
     
     // Parse the AI's JSON output
-    const items = JSON.parse(content);
-    return NextResponse.json({ items });
+    let items;
+    if (result.items) {
+      items = result.items;
+    } else {
+      const content = result.content;
+      items = JSON.parse(content);
+    }
+    
+    // Increment usage counter after successful generation
+    await incrementInvoiceUsage(usageCheck.userId);
+    
+    return NextResponse.json({ 
+      items,
+      remaining: usageCheck.remaining - 1,
+      tier: usageCheck.tierName,
+      provider: result.provider,        // 'local' or 'openrouter'
+      cost: result.cost,                // $0 for local, ~$0.001 for cloud
+      fallback: result.fallback         // true if used fallback
+    });
 
   } catch (error: any) {
     console.error("[AI_BRIDGE_ERROR]:", error.message);
     return NextResponse.json(
-      { error: "Local AI Node Offline. Ensure start-llm-server.sh is running." }, 
+      { error: "AI generation failed. Both local and cloud providers are unavailable." },
       { status: 503 }
     );
   }

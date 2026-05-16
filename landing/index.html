@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FreeInvoice — AI Facturatie voor ZZP'ers | 30 Seconden, Professionele PDF</title>
+  <meta name="description" content="Typ je werk. AI maakt een professionele factuur — met BTW, IBAN, KVK. 3 gratis facturen/maand. Pro €9/maand. 1-voor-3 sociale impact.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --indigo: #4f46e5;
+      --indigo-dark: #4338ca;
+      --indigo-light: #e0e7ff;
+      --emerald: #10b981;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-400: #9ca3af;
+      --gray-500: #6b7280;
+      --gray-600: #4b5563;
+      --gray-900: #111827;
+      --white: #ffffff;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      color: var(--gray-900);
+      background: var(--white);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Navigation */
+    .nav {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--gray-100);
+    }
+    .nav-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 1.5rem;
+    }
+    .logo {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-weight: 900; font-size: 1.25rem; color: var(--indigo);
+      text-decoration: none;
+    }
+    .logo-icon {
+      width: 28px; height: 28px;
+      background: var(--indigo);
+      border-radius: 8px;
+      display: grid; place-items: center;
+    }
+    .logo-icon svg { width: 16px; height: 16px; fill: white; }
+    .nav-links { display: none; gap: 2rem; }
+    .nav-links a {
+      text-decoration: none; color: var(--gray-500);
+      font-size: 0.875rem; font-weight: 600;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--gray-900); }
+    .nav-cta {
+      display: none;
+      background: var(--indigo); color: white;
+      padding: 0.5rem 1.25rem; border-radius: 9999px;
+      text-decoration: none; font-size: 0.875rem; font-weight: 700;
+      transition: background 0.2s;
+    }
+    .nav-cta:hover { background: var(--indigo-dark); }
+
+    /* Hero */
+    .hero {
+      max-width: 1200px; margin: 0 auto;
+      padding: 4rem 1.5rem 5rem;
+      text-align: center;
+    }
+    .badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--indigo-light); color: var(--indigo);
+      padding: 0.5rem 1rem; border-radius: 9999px;
+      font-size: 0.75rem; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 0.05em;
+      margin-bottom: 1.5rem;
+    }
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 900; line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.25rem;
+    }
+    .hero h1 span { color: var(--indigo); font-style: italic; }
+    .hero p {
+      font-size: clamp(1.1rem, 2vw, 1.35rem);
+      color: var(--gray-500); max-width: 560px;
+      margin: 0 auto 2rem; font-weight: 500;
+    }
+    .hero-ctas {
+      display: flex; flex-wrap: wrap; gap: 1rem;
+      justify-content: center; align-items: center;
+    }
+    .btn-primary {
+      background: var(--indigo); color: white;
+      padding: 1rem 2rem; border-radius: 16px;
+      text-decoration: none; font-weight: 800; font-size: 1.05rem;
+      transition: all 0.2s; box-shadow: 0 8px 24px rgba(79,70,229,0.25);
+      display: inline-flex; align-items: center; gap: 0.5rem;
+    }
+    .btn-primary:hover { background: var(--indigo-dark); transform: translateY(-1px); }
+    .btn-secondary {
+      background: var(--gray-100); color: var(--gray-900);
+      padding: 1rem 2rem; border-radius: 16px;
+      text-decoration: none; font-weight: 700; font-size: 1rem;
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover { background: var(--gray-200); }
+    .hero-note {
+      display: flex; align-items: center; justify-content: center; gap: 0.4rem;
+      margin-top: 1rem; font-size: 0.875rem; color: var(--gray-400); font-weight: 600;
+    }
+    .hero-note svg { color: var(--emerald); width: 16px; height: 16px; }
+
+    /* Demo Section */
+    .demo {
+      background: var(--gray-50);
+      padding: 4rem 1.5rem;
+    }
+    .demo-inner {
+      max-width: 900px; margin: 0 auto;
+      background: var(--white);
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.06);
+      overflow: hidden;
+    }
+    .demo-header {
+      background: linear-gradient(135deg, var(--indigo), #3730a3);
+      padding: 1.5rem 2rem;
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .demo-header h3 { color: white; font-weight: 800; font-size: 1rem; }
+    .demo-body { padding: 2rem; }
+    .demo-input {
+      background: var(--gray-50); border: 1px solid var(--gray-200);
+      border-radius: 12px; padding: 1rem; width: 100%;
+      font-family: inherit; font-size: 0.95rem; color: var(--gray-600);
+      margin-bottom: 1rem; resize: vertical; min-height: 80px;
+    }
+    .demo-btn {
+      background: var(--indigo); color: white;
+      border: none; padding: 0.75rem 1.5rem; border-radius: 10px;
+      font-weight: 700; cursor: pointer; font-size: 0.9rem;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+    }
+    .demo-btn:hover { background: var(--indigo-dark); }
+    .demo-result {
+      margin-top: 1.5rem;
+      border: 1px solid var(--gray-200); border-radius: 12px;
+      overflow: hidden; display: none;
+    }
+    .demo-result.active { display: block; }
+    .demo-result-header {
+      background: var(--gray-100); padding: 0.75rem 1rem;
+      font-size: 0.8rem; font-weight: 700; color: var(--gray-500);
+      text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .demo-result table { width: 100%; border-collapse: collapse; }
+    .demo-result th, .demo-result td {
+      padding: 0.75rem 1rem; text-align: left;
+      font-size: 0.9rem; border-bottom: 1px solid var(--gray-100);
+    }
+    .demo-result th { font-weight: 700; color: var(--gray-500); background: var(--gray-50); }
+    .demo-result td { color: var(--gray-700); }
+    .demo-result .total-row { font-weight: 800; color: var(--indigo); }
+
+    /* Features */
+    .features {
+      max-width: 1200px; margin: 0 auto;
+      padding: 5rem 1.5rem;
+    }
+    .section-header {
+      text-align: center; margin-bottom: 3rem;
+    }
+    .section-header h2 {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 900; letter-spacing: -0.02em;
+    }
+    .features-grid {
+      display: grid; grid-template-columns: 1fr; gap: 1.5rem;
+    }
+    .feature-card {
+      background: var(--gray-50);
+      border-radius: 20px; padding: 2rem;
+      border: 1px solid var(--gray-100);
+      transition: all 0.2s;
+    }
+    .feature-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.06);
+    }
+    .feature-icon {
+      width: 48px; height: 48px; border-radius: 12px;
+      display: grid; place-items: center; margin-bottom: 1rem;
+    }
+    .feature-card h3 { font-size: 1.15rem; font-weight: 800; margin-bottom: 0.5rem; }
+    .feature-card p { color: var(--gray-500); font-size: 0.95rem; line-height: 1.6; }
+
+    /* Pricing */
+    .pricing {
+      background: var(--gray-50);
+      padding: 5rem 1.5rem;
+    }
+    .pricing-inner {
+      max-width: 1200px; margin: 0 auto;
+    }
+    .pricing-grid {
+      display: grid; grid-template-columns: 1fr; gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    .pricing-card {
+      background: var(--white);
+      border-radius: 24px; padding: 2rem;
+      border: 2px solid transparent;
+      transition: all 0.2s;
+      position: relative;
+    }
+    .pricing-card.popular {
+      border-color: var(--indigo);
+      box-shadow: 0 12px 40px rgba(79,70,229,0.12);
+    }
+    .popular-badge {
+      position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+      background: var(--indigo); color: white;
+      padding: 0.35rem 1rem; border-radius: 9999px;
+      font-size: 0.75rem; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .pricing-card h3 { font-size: 1.25rem; font-weight: 800; margin-bottom: 0.25rem; }
+    .pricing-card .price {
+      font-size: 2.5rem; font-weight: 900; color: var(--gray-900);
+      margin: 0.5rem 0;
+    }
+    .pricing-card .price span { font-size: 1rem; font-weight: 600; color: var(--gray-400); }
+    .pricing-card .desc { color: var(--gray-500); font-size: 0.9rem; margin-bottom: 1.5rem; }
+    .pricing-card ul { list-style: none; margin-bottom: 1.5rem; }
+    .pricing-card li {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.4rem 0; font-size: 0.9rem; color: var(--gray-600);
+    }
+    .pricing-card li svg { width: 18px; height: 18px; color: var(--emerald); flex-shrink: 0; }
+    .pricing-btn {
+      display: block; width: 100%; text-align: center;
+      padding: 0.875rem; border-radius: 12px;
+      font-weight: 800; text-decoration: none;
+      transition: all 0.2s; font-size: 0.95rem;
+    }
+    .pricing-btn-primary {
+      background: var(--indigo); color: white;
+    }
+    .pricing-btn-primary:hover { background: var(--indigo-dark); }
+    .pricing-btn-secondary {
+      background: var(--gray-100); color: var(--gray-900);
+    }
+    .pricing-btn-secondary:hover { background: var(--gray-200); }
+
+    /* Impact */
+    .impact {
+      max-width: 800px; margin: 0 auto;
+      padding: 5rem 1.5rem;
+      text-align: center;
+    }
+    .impact h2 {
+      font-size: clamp(1.5rem, 3.5vw, 2.25rem);
+      font-weight: 900; margin-bottom: 1rem;
+    }
+    .impact p { color: var(--gray-500); font-size: 1.1rem; max-width: 560px; margin: 0 auto 2rem; }
+    .impact-stats {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;
+    }
+    .impact-stat h4 { font-size: 2rem; font-weight: 900; color: var(--indigo); }
+    .impact-stat p { font-size: 0.85rem; color: var(--gray-500); margin-top: 0.25rem; }
+
+    /* FAQ */
+    .faq {
+      background: var(--gray-50);
+      padding: 5rem 1.5rem;
+    }
+    .faq-inner {
+      max-width: 700px; margin: 0 auto;
+    }
+    .faq-item {
+      background: var(--white);
+      border-radius: 16px; margin-bottom: 1rem;
+      overflow: hidden;
+    }
+    .faq-question {
+      width: 100%; display: flex; justify-content: space-between; align-items: center;
+      padding: 1.25rem; background: none; border: none;
+      font-family: inherit; font-size: 1rem; font-weight: 700;
+      cursor: pointer; text-align: left;
+    }
+    .faq-question svg { transition: transform 0.2s; width: 20px; height: 20px; color: var(--gray-400); }
+    .faq-question.active svg { transform: rotate(180deg); }
+    .faq-answer {
+      max-height: 0; overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+    .faq-answer.active { max-height: 300px; }
+    .faq-answer p {
+      padding: 0 1.25rem 1.25rem;
+      color: var(--gray-500); font-size: 0.95rem; line-height: 1.7;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--gray-900); color: var(--gray-400);
+      padding: 3rem 1.5rem; text-align: center;
+    }
+    footer p { font-size: 0.875rem; }
+    footer a { color: var(--gray-300); text-decoration: none; }
+    footer a:hover { color: white; }
+
+    /* Responsive */
+    @media (min-width: 640px) {
+      .nav-links { display: flex; }
+      .nav-cta { display: inline-flex; }
+      .features-grid { grid-template-columns: repeat(3, 1fr); }
+      .pricing-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="#" class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        FreeInvoice
+      </a>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#impact">Impact</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <a href="#pricing" class="nav-cta">Start Free</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="badge">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      AI Facturatie voor 1.2M Nederlandse Freelancers
+    </div>
+    <h1>Factureren<br><span>in 30 seconden.</span></h1>
+    <p>Typ wat je hebt gedaan. AI maakt een professionele factuur — met BTW, IBAN, KVK, en alles erop en eraan. Geen sjablonen, geen gedoe.</p>
+    <div class="hero-ctas">
+      <a href="https://buy.stripe.com/PLACEHOLDER_PRO" class="btn-primary" target="_blank" rel="noopener">
+        Proberen — 7 dagen gratis
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="#demo" class="btn-secondary">Bekijk demo</a>
+    </div>
+    <div class="hero-note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      3 gratis facturen/maand · Geen creditcard nodig
+    </div>
+  </section>
+
+  <section class="demo" id="demo">
+    <div class="demo-inner">
+      <div class="demo-header">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <h3>AI Smart Assistant — Live Demo</h3>
+      </div>
+      <div class="demo-body">
+        <textarea class="demo-input" id="demoInput" placeholder="Beschrijf je project, bijv: 'Fullstack Next.js dashboard met Auth en Stripe integratie, 40 uur werk'"></textarea>
+        <button class="demo-btn" onclick="runDemo()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          Genereer factuurregels
+        </button>
+        <div class="demo-result" id="demoResult">
+          <div class="demo-result-header">Gegenereerde factuurregels</div>
+          <table>
+            <thead><tr><th>Omschrijving</th><th>Uren</th><th>Tarief</th><th>Bedrag</th></tr></thead>
+            <tbody id="demoTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="features" id="features">
+    <div class="section-header">
+      <h2>Waarom FreeInvoice?</h2>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon" style="background:#fef3c7;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="#f59e0b"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        </div>
+        <h3>AI-Gedreven Snelheid</h3>
+        <p>Stop met 20 minuten per factuur. Typ je werk, en krijg direct een professionele PDF met BTW-berekening en IBAN.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:#d1fae5;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="#10b981"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h3>Privacy First</h3>
+        <p>Onze AI draait lokaal op eigen GPU. Jouw klantdata blijft uit de cloud — maximale vertrouwelijkheid.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:#e0e7ff;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="#4f46e5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01" stroke="white" stroke-width="2"/></svg>
+        </div>
+        <h3>1-voor-3 Impact</h3>
+        <p>Elk Pro-abonnement financiert 3 gratis accounts voor freelancers in ontwikkelingslanden. Samen maken we het eerlijker.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="pricing" id="pricing">
+    <div class="pricing-inner">
+      <div class="section-header">
+        <h2>Kies je plan</h2>
+        <p style="color:var(--gray-500);margin-top:0.5rem;">Start gratis. Upgrade wanneer je klaar bent om te schalen.</p>
+      </div>
+      <div class="pricing-grid">
+        <div class="pricing-card">
+          <h3>Free</h3>
+          <div class="price">€0 <span>voor altijd</span></div>
+          <p class="desc">Perfect om FreeInvoice uit te proberen</p>
+          <ul>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> 3 facturen per maand</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> AI-aangedreven generatie</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> PDF-download</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> BTW &amp; IBAN automatisch</li>
+          </ul>
+          <a href="https://freeinvoice.vercel.app/dashboard" class="pricing-btn pricing-btn-secondary">Gratis beginnen</a>
+        </div>
+
+        <div class="pricing-card popular">
+          <div class="popular-badge">Meest gekozen</div>
+          <h3>Pro</h3>
+          <div class="price">€9 <span>/maand</span></div>
+          <p class="desc">Voor ZZP'ers en kleine bedrijven</p>
+          <ul>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> 50 facturen per maand</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> Klantbeheer</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> Factuurhistorie</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> E-mail levering</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> 1-voor-3 Sociale Impact</li>
+          </ul>
+          <a href="https://buy.stripe.com/PLACEHOLDER_PRO" class="pricing-btn pricing-btn-primary" target="_blank" rel="noopener">Pro proberen — 7 dagen gratis</a>
+        </div>
+
+        <div class="pricing-card">
+          <h3>Agency</h3>
+          <div class="price">€29 <span>/maand</span></div>
+          <p class="desc">Voor teams en bureaus</p>
+          <ul>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> Onbeperkte facturen</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> White-label facturen</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> 5 teamleden</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> API-toegang</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> Dedicated support</li>
+          </ul>
+          <a href="https://buy.stripe.com/PLACEHOLDER_AGENCY" class="pricing-btn pricing-btn-secondary" target="_blank" rel="noopener">Agency kiezen</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="impact" id="impact">
+    <h2>Factureren met impact</h2>
+    <p>Elke keer dat jij upgrade naar Pro, geef je drie freelancers in ontwikkelingslanden de kans om ook professioneel te factureren. Geen donatie. Geen extra moeite. Gewoon factureren.</p>
+    <div class="impact-stats">
+      <div class="impact-stat">
+        <h4>1→3</h4>
+        <p>Pro = 3 gratis accounts</p>
+      </div>
+      <div class="impact-stat">
+        <h4>5→15</h4>
+        <p>Agency = 15 gratis accounts</p>
+      </div>
+      <div class="impact-stat">
+        <h4>€0</h4>
+        <p>Extra kosten voor jou</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq" id="faq">
+    <div class="faq-inner">
+      <div class="section-header">
+        <h2>Veelgestelde vragen</h2>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Moet ik een creditcard gebruiken voor de gratis versie?
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="faq-answer">
+          <p>Nee. De Free-versie is echt gratis — geen creditcard, geen verplichtingen. Je krijgt 3 facturen per maand. Als je meer nodig hebt, upgrade je naar Pro.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Waar blijft mijn data?
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="faq-answer">
+          <p>Onze AI draait op een lokale RTX 3090 Ti GPU. Jouw factuurgegevens worden niet naar externe AI-diensten gestuurd. We gebruiken Stripe voor betalingen en een beveiligde database voor factuurhistorie.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Kan ik op elk moment annuleren?
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="faq-answer">
+          <p>Ja. Je kunt op elk moment annuleren via je dashboard. Geen verborgen kosten, geen opzegtermijn. Je behoudt toegang tot je factuurhistorie.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Is dit geschikt voor mijn branche?
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="faq-answer">
+          <p>FreeInvoice werkt voor elke freelancer in Nederland — van developers en designers tot adviseurs, trainers en zzp'ers in de bouw. De AI past de taal en het uurtarief automatisch aan op basis van je projectbeschrijving.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2026 FreeInvoice — Gebouwd met ❤️ voor Nederlandse freelancers.</p>
+    <p style="margin-top:0.5rem;"><a href="mailto:hello@freeinvoice.nl">hello@freeinvoice.nl</a> · <a href="#pricing">Start gratis</a></p>
+  </footer>
+
+  <script>
+    // Demo logic
+    function runDemo() {
+      const input = document.getElementById('demoInput').value.trim();
+      if (!input) return;
+
+      const result = document.getElementById('demoResult');
+      const table = document.getElementById('demoTable');
+
+      // Simulate AI generation
+      const items = [
+        { desc: 'Frontend ontwikkeling (React / Next.js)', qty: 24, rate: 85 },
+        { desc: 'Backend API & database design', qty: 16, rate: 85 },
+        { desc: 'Stripe betalingsintegratie', qty: 8, rate: 95 },
+        { desc: 'Authenticatie & beveiliging', qty: 6, rate: 90 },
+      ];
+
+      let html = '';
+      let total = 0;
+      items.forEach(item => {
+        const amount = item.qty * item.rate;
+        total += amount;
+        html += `<tr><td>${item.desc}</td><td>${item.qty}</td><td>€${item.rate}</td><td>€${amount.toLocaleString('nl-NL')}</td></tr>`;
+      });
+      html += `<tr class="total-row"><td colspan="3">Totaal (excl. BTW)</td><td>€${total.toLocaleString('nl-NL')}</td></tr>`;
+      html += `<tr class="total-row"><td colspan="3">BTW 21%</td><td>€${(total * 0.21).toLocaleString('nl-NL', {maximumFractionDigits:2})}</td></tr>`;
+      html += `<tr class="total-row"><td colspan="3">Totaal (incl. BTW)</td><td>€${(total * 1.21).toLocaleString('nl-NL', {maximumFractionDigits:2})}</td></tr>`;
+
+      table.innerHTML = html;
+      result.classList.add('active');
+    }
+
+    // FAQ toggle
+    function toggleFaq(btn) {
+      btn.classList.toggle('active');
+      btn.nextElementSibling.classList.toggle('active');
+    }
+  </script>
+
+</body>
+</html>

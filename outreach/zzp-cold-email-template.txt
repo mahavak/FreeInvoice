@@ -1,0 +1,21 @@
+Subject: Factureren in 30 seconden — gratis voor jou, impact voor drie anderen
+
+Hi {{name}},
+
+Freelancers in Nederland verliezen gemiddeld 4 uur per week aan administratie. De helft daarvan is facturatie.
+
+Ik bouwde FreeInvoice — een AI-gedreven factuur-tool die van een simpele projectbeschrijving een professionele PDF maakt, compleet met BTW, IBAN en KVK-nummer. Geen sjablonen, geen gedoe.
+
+Het unieke: het "1-voor-3" model. Voor elke Pro-abonnement (€9/maand) financieren we 3 gratis accounts voor freelancers in ontwikkelingslanden. Jij bespaart tijd én helpt wereldwijde makers.
+
+→ Start gratis: https://freeinvoice.vercel.app (3 facturen/maand)
+→ Of probeer Pro 7 dagen gratis
+
+Ik zoek 10 Nederlandse freelancers die dit willen testen en feedback geven. Jouw input bepaalt de volgende features.
+
+Interesse? Reply naar deze mail of boek een 10-minutengesprek: {{booking_link}}
+
+Groet,
+{{signature}}
+
+P.S. — De AI draait lokaal op eigen GPU. Jouw klantdata blijft uit de cloud.
